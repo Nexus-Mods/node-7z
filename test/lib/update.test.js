@@ -16,8 +16,7 @@ describe('Method: `Zip.update`', function () {
 
   it('should return entries on progress', function (done) {
     fs.copySync('test/zip.7z', '.tmp/test/update.7z');
-    update('.tmp/test/update.7z', '*.md', { w: 'test' })
-    .progress(function (entries) {
+    update('.tmp/test/update.7z', '*.md', { w: 'test' }, function (entries) {
       expect(entries.length).to.be.at.least(1);
       done();
     });

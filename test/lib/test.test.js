@@ -14,11 +14,9 @@ describe('Method: `Zip.test`', function () {
   });
 
   it('should return entries on progress', function (done) {
-    test('test/zip.7z', { r: true })
-    .progress(function (entries) {
+    test('test/zip.7z', { r: true }, function (entries) {
       expect(entries.length).to.be.at.least(1);
       done();
     });
   });
-
 });

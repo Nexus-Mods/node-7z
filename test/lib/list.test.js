@@ -26,28 +26,30 @@ describe('Method: `Zip.list`', function () {
   });
 
   it('should return valid entries on progress', function (done) {
-    list('test/zip.zip')
-    .progress(function (entries) {
+    list('test/zip.zip', function (entries) {
       expect(entries.length).to.be.at.least(1);
       expect(entries[0].date).to.be.an.instanceof(Date);
-      expect(entries[0].attr.length).to.eql(5);
+      expect(entries[0].attr.length).to.eql(10);
       expect(entries[0].name).to.be.a('string');
-      expect(entries[0].name).to.not.contain('\\');
+    })
+    .then(function () {
       done();
     });
   });
 
   it('should not ignore files with blank "Compressed" columns', function (done) {
-    list('test/blank-compressed.7z')
-    .progress(function (files) {
-      expect(files.length).to.be.eql(8);
+    var res = [];
+    list('test/blank-compressed.7z', function (files) {
+      res = [].concat(res, files);
+    }).then(function () {
+      expect(res.length).to.be.eql(8);
       done();
     });
   });
 
   it('should not ignore read-only, hidden and system files', function () {
     var files = [];
-    return list('test/attr.7z').progress(function (chunk) {
+    return list('test/attr.7z', function (chunk) {
       [].push.apply(files, chunk);
     }).then(function () {
       expect(files.length).to.be.eql(9);

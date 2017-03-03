@@ -1,6 +1,6 @@
 {
   "name": "node-7z",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "A Node.js wrapper for 7-Zip",
   "main": "lib/index.js",
   "scripts": {
@@ -26,17 +26,18 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/quentinrossetti/node-7zip/issues"
+    "url": "https://github.com/TanninOne/node-7z/issues"
   },
-  "homepage": "https://github.com/quentinrossetti/node-7zip.git",
+  "homepage": "https://github.com/TanninOne/node-7z.git",
   "dependencies": {
-    "when": "^3.7.7",
-    "cross-spawn": "^4.0.0"
+    "7z-bin": "file:../7z-bin",
+    "bluebird": "^3.4.7",
+    "cross-spawn": "^5.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "fs-extra": "^0.30.0",
+    "fs-extra": "^2.0.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.2"
+    "mocha": "^3.2.0"
   }
 }

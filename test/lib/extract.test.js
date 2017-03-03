@@ -14,7 +14,7 @@ describe('Method: `Zip.extract`', function () {
     });
   });
 
-  it('should return an error on output duplticate', function (done) {
+  it('should return an error on output duplicate', function (done) {
     extract('test/zip.7z', '.tmp/test', { o: '.tmp/test/duplicate' })
     .catch(function (err) {
       expect(err).to.be.an.instanceof(Error);
@@ -23,9 +23,12 @@ describe('Method: `Zip.extract`', function () {
   });
 
   it('should return entries on progress', function (done) {
-    extract('test/zip.7z', '.tmp/test')
-    .progress(function (entries) {
-      expect(entries.length).to.be.at.least(1);
+    var allEntries = [];
+    extract('test/zip.7z', '.tmp/test', function (entries) {
+      allEntries = [].concat(allEntries, entries);
+    })
+    .then(function() {
+      expect(allEntries.length).to.be.at.least(1);
       done();
     });
   });

@@ -23,8 +23,7 @@ describe('Method: `Zip.extractFull`', function () {
   });
 
   it('should return entries on progress', function (done) {
-    extractFull('test/zip.7z', '.tmp/test')
-    .progress(function (entries) {
+    extractFull('test/zip.7z', '.tmp/test', function (entries) {
       expect(entries.length).to.be.at.least(1);
       done();
     });
@@ -39,8 +38,7 @@ describe('Method: `Zip.extractFull`', function () {
   });
 
   it('should extract only given wilcards', function (done) {
-    extractFull('test/wildcards.zip', '.tmp/test/', { wildcards: ['*.txt'], r: true })
-    .progress(function (files) {
+    extractFull('test/wildcards.zip', '.tmp/test/', { wildcards: ['*.txt'], r: true }, function (files) {
       files.forEach(function (f) {
         expect(f).to.include('.txt');
       });

@@ -1,8 +1,8 @@
 'use strict';
 var os    = require('os');
 var spawn = require('cross-spawn');
-var when  = require('when');
 var path  = require('path');
+var Promise = require('bluebird');
 var utilSwitches = require('./switches');
 
 /**
@@ -13,8 +13,8 @@ var utilSwitches = require('./switches');
  * @reject {Error} The error issued by 7-Zip.
  * @reject {number} Exit code issued by 7-Zip.
  */
-module.exports = function (command, switches) {
-  return when.promise(function (fulfill, reject, progress) {
+module.exports = function (command, switches, progress) {
+  return new Promise(function (resolve, reject) {
 
     // Parse the command variable. If the command is not a string reject the
     // Promise. Otherwise transform the command into two variables: the command
@@ -78,27 +78,31 @@ module.exports = function (command, switches) {
       cmd: cmd,
       args: args,
       options: { stdio: 'pipe' } };
-    // console.log('>>', res.cmd, res.args.join(' '));
     var run = spawn(res.cmd, res.args, res.options);
     run.stdout.on('data', function (data) {
       var res = reg.exec(data.toString());
       if (res) {
         err = new Error(res[1]);
       }
-      return progress(data.toString());
+      if (progress !== undefined) {
+        progress(data.toString());
+      }
     });
     run.stderr.on('data', function (data) {
       //throw errors
-		  err = data.toString();
+      err = data.toString();
     });
     run.on('error', function (err) {
       reject(err)
     });
     run.on('close', function (code) {
       if (code === 0) {
-        return fulfill(args);
+        return resolve(args);
       }
-      return reject(err, code);
+      if (err !== undefined) {
+        return reject(new Error(err));
+      }
+      return reject(new Error('Errorcode ' + code));
     });
 
   });

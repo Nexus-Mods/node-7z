@@ -14,8 +14,7 @@ describe('Method: `Zip.add`', function () {
   });
 
   it('should return entries on progress', function (done) {
-    add('.tmp/test/add.zip', '*.md')
-    .progress(function (entries) {
+    add('.tmp/test/add.zip', '*.md', {}, function (entries) {
       expect(entries.length).to.be.at.least(1);
       done();
     });
@@ -23,13 +22,12 @@ describe('Method: `Zip.add`', function () {
 
   it('should accept array as source', function (done) {
     var store = [];
-    add('.tmp/test/add.zip', ['*.md', '*.js'])
-    .progress(function (entries) {
+    add('.tmp/test/add.zip', ['*.md', '*.js'], function (entries) {
       entries.forEach(function (e) {
         store.push(e);
       });
     })
-    .done(function () {
+    .then(function () {
       expect(store.length).to.be.at.least(4);
       done();
     });
