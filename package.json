@@ -26,11 +26,11 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TanninOne/node-7z/issues"
+    "url": "https://github.com/Nexus-Mods/node-7z/issues"
   },
-  "homepage": "https://github.com/TanninOne/node-7z.git",
+  "homepage": "https://github.com/Nexus-Mods/node-7z.git",
   "dependencies": {
-    "7z-bin": "file:../7z-bin",
+    "7z-bin": "Nexus-Mods/7z-bin",
     "bluebird": "^3.4.7",
     "cross-spawn": "^5.1.0"
   },
