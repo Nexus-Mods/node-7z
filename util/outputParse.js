@@ -1,4 +1,8 @@
 module.exports = function(relay, searchText) {
+  if (searchText.indexOf('Unsupported Method') !== -1) {
+    throw new Error('Unsupported Method');
+  }
+
   var filt = function(line) {
     return line.substr(0, searchText.length) === searchText;
   };

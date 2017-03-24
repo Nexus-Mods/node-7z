@@ -35,7 +35,11 @@ module.exports = function (cmd, args, switches, progress) {
         err = new Error(res[1]);
       }
       if (progress !== undefined) {
-        progress(data.toString());
+        try {
+          progress(data.toString());
+        } catch (err) {
+          reject(err);
+        }
       }
     });
     run.stderr.on('data', function (data) {

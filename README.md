@@ -5,6 +5,15 @@ node-7z
 
 > A Node.js wrapper for 7-Zip
 
+At this point this is practically a rewrite.
+Compared to the original node-7z by Quentin Rossetti this:
+- uses bluebird promises instead of "when"
+- uses a progress function instead of Promise.progress events (since those are deprecated)
+- uses a secondary project to download the 7z binary (windows only atm, contributions welcome)
+- fixes problems with parsing "list" output
+- fixes problems parsing command line parameters
+- has less redundant code
+
 Usage
 -----
 
@@ -33,16 +42,6 @@ myTask.extractFull('myArchive.7z', 'destination', { p: 'myPassword' })
 
 Installation
 ------------
-
-You must have the `7z` executable available in your PATH or in the same
-directory of your `package.json` file.
-
-> On Debian and Ubuntu install the `p7zip-full` package.
-
-> On Windows use the `7z.exe` ([link here](http://sourceforge.net/projects/sevenzip/files/7-Zip/))
-> binary.
-
-> On Mac OSX use Homebrew `brew install p7zip`
 
 ```
 npm install --save node-7z
