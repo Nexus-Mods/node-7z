@@ -1,14 +1,12 @@
 node-7z
 =======
 
-[![Dependencies Status][david-image]][david-url] [![Build Status][travis-image]][travis-url] [![Code coverage][coveralls-image]][coveralls-url] [![Code quality][codeclimate-image]][codeclimate-url] [![Release][npm-image]][npm-url]
-
 > A Node.js wrapper for 7-Zip
 
 At this point this is practically a rewrite.
 Compared to the original node-7z by Quentin Rossetti this:
 - uses bluebird promises instead of "when"
-- uses a progress function instead of Promise.progress events (since those are deprecated)
+- uses a progress callback instead of Promise.progress events (since those are deprecated)
 - uses a secondary project to download the 7z binary (windows only atm, contributions welcome)
 - fixes problems with parsing "list" output
 - fixes problems parsing command line parameters
