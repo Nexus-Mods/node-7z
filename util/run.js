@@ -1,9 +1,27 @@
 'use strict';
 var os    = require('os');
-var spawn = require('cross-spawn');
+var cp  = require('child_process');
 var path  = require('path');
 var Promise = require('bluebird');
 var utilSwitches = require('./switches');
+
+var errRE = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
+
+function feedStdout(progress, output) {
+  var res = errRE.exec(output);
+  if (res) {
+    throw new Error(res[1]);
+  }
+  if (progress !== undefined) {
+    progress(output);
+  }
+}
+
+function feedStderr(output) {
+  if (output) {
+    throw new Error(output);
+  }
+}
 
 /**
  * @promise Run
@@ -23,28 +41,16 @@ module.exports = function (cmd, args, switches, progress) {
     // of the stdout create an new error with the 7-Zip error message as the
     // error's message. Otherwise progress with stdout message.
     var err;
-    var reg = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
-    var res = {
-      cmd: cmd,
-      args: args,
-      options: { stdio: 'pipe' } };
-    var run = spawn(res.cmd, res.args, res.options);
-    run.stdout.on('data', function (data) {
-      var res = reg.exec(data.toString());
-      if (res) {
-        err = new Error(res[1]);
+    var run = cp.execFile(cmd, args, function (error, stdout, stderr) {
+      if (error) {
+        reject(error);
       }
-      if (progress !== undefined) {
-        try {
-          progress(data.toString());
-        } catch (err) {
-          reject(err);
-        }
+      try {
+        feedStdout(progress, stdout);
+        feedStderr(stderr);
+      } catch (err) {
+        reject(err);
       }
-    });
-    run.stderr.on('data', function (data) {
-      //throw errors
-      err = data.toString();
     });
     run.on('error', function (err) {
       reject(err)
