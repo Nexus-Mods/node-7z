@@ -1,5 +1,5 @@
 module.exports = function (passwordCB, relay) {
-  return function(output, stdin) {
+  return function(output, stdin, cancel) {
     var idx = output.findIndex(function (value) {
       return value.startsWith('Enter password'); });
 
@@ -7,18 +7,21 @@ module.exports = function (passwordCB, relay) {
       if (passwordCB) {
         output.splice(idx, 1);
         if (relay) {
-          relay(output, stdin);
+          relay(output, stdin, cancel);
         }
         passwordCB()
         .then(function (password) {
           stdin.write(password + '\n');
+        })
+        .catch(function (err) {
+          cancel();
         });
       } else {
         throw new Error('Password protected');
       }
     } else {
       if (relay) {
-        relay(output, stdin);
+        relay(output, stdin, cancel);
       }
     }
   } 

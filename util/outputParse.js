@@ -14,10 +14,10 @@ module.exports = function(relay, searchText) {
     return line.substr(searchText.length);
   };
 
-  return function(input, stdin) {
+  return function(input, stdin, cancel) {
     var filteredOutput = input.split('\r\n').filter(filt).map(transform);
     if (filteredOutput.length > 0) {
-      relay(filteredOutput, stdin);
+      relay(filteredOutput, stdin, cancel);
     }
     return;
   }
