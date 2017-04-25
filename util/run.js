@@ -7,13 +7,13 @@ var utilSwitches = require('./switches');
 
 var errRE = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
 
-function feedStdout(progress, output) {
+function feedStdout(progress, output, stdin) {
   var res = errRE.exec(output);
   if (res) {
     throw new Error(res[1]);
   }
   if (progress !== undefined) {
-    progress(output);
+    progress(output, stdin);
   }
 }
 
@@ -28,7 +28,8 @@ function feedStderr(output) {
  * @param {string} cmd The command to run.
  * @param {Array} args The parameters to pass.
  * @param {Array} switches Options for 7-Zip as an array.
- * @progress {string} stdout message.
+ * @param {Function} progress function receiving the output. Also receives stdin for the remote process
+ *                            as a second parameter, in case a password has to be entered in response.
  * @reject {Error} The error issued by 7-Zip.
  * @reject {number} Exit code issued by 7-Zip.
  */
@@ -45,9 +46,17 @@ module.exports = function (cmd, args, switches, progress) {
       if (error) {
         reject(error);
       }
+    });
+    run.stdout.on('data', function (data) {
       try {
-        feedStdout(progress, stdout);
-        feedStderr(stderr);
+        feedStdout(progress, data.toString(), run.stdin);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    run.stderr.on('data', function (data) {
+      try {
+        feedStderr(data.toString());
       } catch (err) {
         reject(err);
       }
