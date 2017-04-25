@@ -8,7 +8,7 @@ var extract = require('../../lib/extractFull');
 describe('Method: `Zip.delete`', function () {
 
   it('should return an error on 7z error', function (done) {
-    del('.tmp/test/addnot.7z', '.tmp/test/nothere', { '???': true })
+    del('.tmp/test/addnot.7z', [ '.tmp/test/nothere' ], { '???': true })
     .catch(function (err) {
       expect(err).to.be.an.instanceof(Error);
       done();
@@ -17,7 +17,7 @@ describe('Method: `Zip.delete`', function () {
 
   it('should return on fulfillment', function (done) {
     fs.copySync('test/zip.7z', '.tmp/test/copy.7z');
-    del('.tmp/test/copy.7z', '*.txt')
+    del('.tmp/test/copy.7z', [ '*.txt' ])
     .then(function () {
       done();
     });

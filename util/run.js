@@ -23,6 +23,12 @@ function feedStderr(output) {
   }
 }
 
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error('Assertion failed: ' + message);
+  }
+}
+
 /**
  * @promise Run
  * @param {string} cmd The command to run.
@@ -33,7 +39,14 @@ function feedStderr(output) {
  * @reject {Error} The error issued by 7-Zip.
  * @reject {number} Exit code issued by 7-Zip.
  */
-module.exports = function (cmd, args, switches, progress) {
+module.exports = function(cmd, args, switches, progress) {
+  try {
+    assert(typeof(cmd) === 'string', 'Command must be a string');
+    assert(Array.isArray(args), 'args should be an array');
+  } catch (err) {
+    return Promise.reject(err);
+  }
+
   return new Promise(function (resolve, reject) {
     // Add switches to the `args` array.
     args = args.concat(utilSwitches(switches));

@@ -77,4 +77,19 @@ describe('Method: `Zip.extractFull`', function () {
     });
   });
 
+  it('supports password callback', function (done) {
+    extractFull('test/zip.password.7z', '.tmp/test/', { wildcards: ['*.txt'], r: true }, function (files) {
+      files.forEach(function (f) {
+        expect(f).to.include('.txt');
+      });
+    }, function () {
+      return Promise.resolve('secret');
+    })
+    .then(function () {
+      done();
+    })
+    .catch(function (err) {
+      done(err);
+    });
+  });
 });

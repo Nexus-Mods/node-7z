@@ -6,7 +6,7 @@ var add    = require('../../lib/add');
 describe('Method: `Zip.add`', function () {
 
   it('should return an error on 7z error', function (done) {
-    add('.tmp/test/addnot.7z', '.tmp/test/nothere', { '???': true })
+    add('.tmp/test/addnot.7z', [ '.tmp/test/nothere' ], { '???': true })
     .catch(function (err) {
       expect(err).to.be.an.instanceof(Error);
       done();
@@ -14,7 +14,7 @@ describe('Method: `Zip.add`', function () {
   });
 
   it('should return entries on progress', function (done) {
-    add('.tmp/test/add.zip', '*.md', {}, function (entries) {
+    add('.tmp/test/add.zip', [ '*.md' ], {}, function (entries) {
       expect(entries.length).to.be.at.least(1);
       done();
     });

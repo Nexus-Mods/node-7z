@@ -6,13 +6,20 @@ module.exports = function (passwordCB, relay) {
     if (idx !== -1) {
       if (passwordCB) {
         output.splice(idx, 1);
-        relay(output, stdin);
-        stdin.write(passwordCB() + '\n');
+        if (relay) {
+          relay(output, stdin);
+        }
+        passwordCB()
+        .then(function (password) {
+          stdin.write(password + '\n');
+        });
       } else {
         throw new Error('Password protected');
       }
     } else {
-      relay(output, stdin);
+      if (relay) {
+        relay(output, stdin);
+      }
     }
   } 
 }
