@@ -56,14 +56,7 @@ module.exports = function(cmd, args, switches, progress) {
     // of the stdout create an new error with the 7-Zip error message as the
     // error's message. Otherwise progress with stdout message.
     var err;
-    var run = cp.execFile(cmd, args, function (error, stdout, stderr) {
-      if (error) {
-        if (canceled) {
-          return reject(new Error('Canceled'));
-        }
-        reject(error);
-      }
-    });
+    var run = cp.spawn(cmd, args);
     run.stdout.on('data', function (data) {
       try {
         feedStdout(progress, data.toString(), run.stdin, function () {
