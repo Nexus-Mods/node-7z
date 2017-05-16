@@ -1,4 +1,5 @@
 var cli = require('7z-bin');
+var path = require('path');
 var parser = require('./outputParse');
 var run = require('./run');
 
