@@ -2,6 +2,8 @@ var cli = require('7z-bin');
 var parser = require('./outputParse');
 var run = require('./run');
 
+cli = cli.replace('app.asar' + path.sep, 'app.asar.unpacked' + path.sep);
+
 module.exports = function(args, options, outputMarker, progress) {
   options = Object.assign({ 'bb3': true }, options);
 
