@@ -8,18 +8,22 @@ var utilSwitches = require('./switches');
 var errRE = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
 
 function feedStdout(progress, output, stdin, cancel) {
-  var res = errRE.exec(output);
-  if (res) {
-    throw new Error(res[1]);
-  }
   if (progress !== undefined) {
     progress(output, stdin, cancel);
+  }
+  var res = errRE.exec(output);
+  if (res) {
+    return res[1];
+  } else {
+    return undefined;
   }
 }
 
 function feedStderr(output) {
   if (output) {
-    throw new Error(output);
+    return output;
+  } else {
+    return undefined;
   }
 }
 
@@ -55,36 +59,39 @@ module.exports = function(cmd, args, switches, progress) {
     // When an stdout is emitted, parse it. If an error is detected in the body
     // of the stdout create an new error with the 7-Zip error message as the
     // error's message. Otherwise progress with stdout message.
-    var err;
+    var errors = [];
     var run = cp.spawn(cmd, args);
     run.stdout.on('data', function (data) {
       try {
-        feedStdout(progress, data.toString(), run.stdin, function () {
+        var errout = feedStdout(progress, data.toString(), run.stdin, function () {
           canceled = true;
           run.kill();
         });
+        if (errout) {
+          errors.push(errout);
+        }
       } catch (err) {
+        run.kill();
         reject(err);
       }
     });
     run.stderr.on('data', function (data) {
       try {
-        feedStderr(data.toString());
+        var errout = feedStderr(data.toString());
+        if (errout) {
+          errors.push(errout);
+        }
       } catch (err) {
+        run.kill();
         reject(err);
       }
     });
     run.on('error', function (err) {
+      run.kill();
       reject(err)
     });
     run.on('close', function (code) {
-      if (code === 0) {
-        return resolve(args);
-      }
-      if (err !== undefined) {
-        return reject(new Error(err));
-      }
-      return reject(new Error('Errorcode ' + code));
+      return resolve({ code: code, errors: errors });
     });
 
   });
