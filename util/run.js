@@ -9,7 +9,7 @@ var errRE = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
 
 function feedStdout(progress, output, stdin, cancel) {
   if (progress !== undefined) {
-    progress(output, stdin, cancel);
+    progress(output, undefined, stdin, cancel);
   }
   var res = errRE.exec(output);
   if (res) {

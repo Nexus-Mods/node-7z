@@ -1,5 +1,5 @@
 module.exports = function (passwordCB, relay) {
-  return function(output, stdin, cancel) {
+  return function(output, percentage, stdin, cancel) {
     var idx = output.findIndex(function (value) {
       return value.startsWith('Enter password'); });
 
@@ -7,7 +7,7 @@ module.exports = function (passwordCB, relay) {
       if (passwordCB) {
         output.splice(idx, 1);
         if (relay) {
-          relay(output, stdin, cancel);
+          relay(output, percentage, stdin, cancel);
         }
         passwordCB()
         .then(function (password) {
@@ -21,7 +21,7 @@ module.exports = function (passwordCB, relay) {
       }
     } else {
       if (relay) {
-        relay(output, stdin, cancel);
+        relay(output, percentage, stdin, cancel);
       }
     }
   } 

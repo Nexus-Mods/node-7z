@@ -18,6 +18,8 @@ module.exports = function (switches) {
   switches.ssc = (switches.ssc === false) ? false : true ;
   switches.ssw = (switches.ssw === true)  ? true  : false;
   switches.y   = (switches.y   === false) ? false : true ;
+  // write progress to stdout to ensure we can parse it
+  switches.bsp1 = (switches.bsp1 === false) ? false : true;
 
   var s;
   /*jshint forin:false*/

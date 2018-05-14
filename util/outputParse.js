@@ -14,10 +14,15 @@ module.exports = function(relay, searchText) {
     return line.substr(searchText.length);
   };
 
-  return function(input, stdin, cancel) {
-    var filteredOutput = input.split('\r\n').filter(filt).map(transform);
-    if (filteredOutput.length > 0) {
-      relay(filteredOutput, stdin, cancel);
+  return function(input, percentage, stdin, cancel) {
+    var lines = input.replace(/\r/g, '\n').split('\n');
+    var filteredOutput = lines.filter(filt).map(transform);
+    var progressLine = lines.find(l => /[ ]*[0-9]+%/.test(l));
+    if (progressLine !== undefined) {
+      percentage = parseInt(progressLine.replace(/[ ]*([0-9]+)%/, '$1'), 10);
+    }
+    if ((filteredOutput.length > 0) || (percentage !== undefined)) {
+      relay(filteredOutput, percentage, stdin, cancel);
     }
     return;
   }
