@@ -24,14 +24,19 @@ declare module "node-7z" {
     (entries: string[], percent: number): void;
   }
 
+  interface IResult {
+    code: number;
+    errors: string[];
+  }
+
   class Zip {
-    add(archive: string, files: string | Array<string>, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<void>;
-    delete(archive: string, files: string | Array<string>, options?: ICommandLineSwitches): Promise<void>;
-    extract(archive: string, dest: string, options?: ICommandLineSwitches, progress?: IProgressCB, passwordCB?: () => Promise<string>): Promise<void>;
-    extractFull(archive: string, dest: string, options?: ICommandLineSwitches, progress?: IProgressCB, passwordCB?: () => Promise<string>): Promise<void>;
+    add(archive: string, files: string | Array<string>, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<IResult>;
+    delete(archive: string, files: string | Array<string>, options?: ICommandLineSwitches): Promise<IResult>;
+    extract(archive: string, dest: string, options?: ICommandLineSwitches, progress?: IProgressCB, passwordCB?: () => Promise<string>): Promise<IResult>;
+    extractFull(archive: string, dest: string, options?: ICommandLineSwitches, progress?: IProgressCB, passwordCB?: () => Promise<string>): Promise<IResult>;
     list(archive: string, options?: ICommandLineSwitches, progress?: (entries: IFileEntry[]) => void): Promise<IFileSpec>;
-    test(archive: string, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<void>;
-    update(archive: string, files: string | Array<string>, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<void>;
+    test(archive: string, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<IResult>;
+    update(archive: string, files: string | Array<string>, options?: ICommandLineSwitches, progress?: IProgressCB): Promise<IResult>;
   }
 
   export = Zip;
