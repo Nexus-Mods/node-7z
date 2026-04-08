@@ -3,8 +3,8 @@
 
 
 "7z-bin@Nexus-Mods/7z-bin":
-  version "24.0.1"
-  resolved "https://codeload.github.com/Nexus-Mods/7z-bin/tar.gz/3298c42e69e3220dc39694bc2f610c077c3e213a"
+  version "26.0.0"
+  resolved "https://codeload.github.com/Nexus-Mods/7z-bin/tar.gz/7a285607c7530af9ae26a7b27e2f7847281c94dd"
 
 abbrev@1:
   version "1.1.1"
